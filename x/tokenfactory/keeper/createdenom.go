@@ -56,6 +56,15 @@ func (k Keeper) createDenomAfterValidation(ctx sdk.Context, creatorAddr string, 
 	return nil
 }
 
+func (k Keeper) getDenomCreatorAddr(ctx sdk.Context, denom string) (string, error) {
+	authorityMetadata, err := k.GetAuthorityMetadata(ctx, denom)
+	if err != nil {
+		return "", err
+	}
+
+	return authorityMetadata.GetAdmin(), nil
+}
+
 func (k Keeper) validateCreateDenom(ctx sdk.Context, creatorAddr string, subdenom string) (newTokenDenom string, err error) {
 	// Temporary check until IBC bug is sorted out
 	if k.bankKeeper.HasSupply(ctx, subdenom) {

@@ -17,7 +17,11 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
 
 	for _, genDenom := range genState.GetFactoryDenoms() {
-		creator, _, err := types.DeconstructDenom(genDenom.GetDenom())
+		_, _, err := types.DeconstructDenom(genDenom.GetDenom())
+		if err != nil {
+			panic(err)
+		}
+		creator, err := k.getDenomCreatorAddr(ctx, genDenom.GetDenom())
 		if err != nil {
 			panic(err)
 		}
